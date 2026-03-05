@@ -2,11 +2,15 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StudentsModule } from './students/students.module';
-import { PrismaService } from './prisma.service'; // <--- 1. Tambahkan Import ini
+import { PrismaService } from './prisma.service';
+// HAPUS BARIS INI: import { BookModule } ... (Sudah tidak dipakai)
+import { PeminjamanModule } from './peminjaman/peminjaman.module';
+import { AuthModule } from './auth/auth.module';
+import { BooksModule } from './books/books.module'; // ✅ Pakai yang ini (Jamak)
 
 @Module({
-  imports: [StudentsModule], // <--- 2. HAPUS 'PrismaModule' dari sini
+  imports: [StudentsModule, PeminjamanModule, AuthModule, BooksModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService], // <--- 3. Masukkan PrismaService ke sini
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
