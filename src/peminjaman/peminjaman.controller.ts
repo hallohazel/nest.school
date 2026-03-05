@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
+import { Request } from 'express';
+
 import { PeminjamanService } from './peminjaman.service';
 import { CreatePeminjamanDto } from './dto/create-peminjaman.dto';
 import { UpdatePeminjamanDto } from './dto/update-peminjaman.dto';
@@ -21,11 +23,10 @@ import { UserRole } from '@prisma/client';
 export class PeminjamanController {
   constructor(private readonly peminjamanService: PeminjamanService) {}
 
-  // 1. PINJAM BUKU (Create) - Admin & Petugas
+  // 1. PINJAM BUKU (Create) for Admin & Petugas
   @Post()
-  @Roles(UserRole.ADMIN, UserRole.PETUGAS)
-  create(@Body() createPeminjamanDto: CreatePeminjamanDto) {
-    return this.peminjamanService.create(createPeminjamanDto);
+  create(@Body() dto: CreatePeminjamanDto) {
+    return this.peminjamanService.create(dto);
   }
 
   // 2. LIHAT HISTORY (FindAll) - Admin & Petugas
@@ -35,7 +36,7 @@ export class PeminjamanController {
     return this.peminjamanService.findAll();
   }
 
-  // 3. LIHAT DETAIL (FindOne) - Semua Boleh
+  // 3. DETAIL (FindOne)
   @Get(':id')
   @Roles(UserRole.ADMIN, UserRole.PETUGAS, UserRole.MEMBER)
   findOne(@Param('id') id: string) {

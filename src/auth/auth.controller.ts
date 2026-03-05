@@ -1,20 +1,25 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { AuthService, RegisterData } from './auth.service';
+import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // --- ENDPOINT LOGIN ---
+  // LOGIN
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto.username, loginDto.password);
   }
 
-  // --- ENDPOINT REGISTER ---
+  // REGISTER (PUBLIK)
   @Post('register')
-  register(@Body() body: RegisterData) {
-    return this.authService.register(body);
+  async register(@Body() registerDto: RegisterDto) {
+    // Timpa role apa pun yang dikirim user menjadi MEMBER
+    return this.authService.register({
+      ...registerDto,
+      role: 'MEMBER',
+    });
   }
 }

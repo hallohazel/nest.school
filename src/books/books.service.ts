@@ -8,32 +8,44 @@ import { Prisma } from '@prisma/client';
 export class BooksService {
   constructor(private prisma: PrismaService) {}
 
-  // 1. Create
+  // Create
   async create(createBookDto: CreateBookDto) {
     return this.prisma.book.create({
       data: createBookDto,
     });
   }
 
-  // 2. Find All + Search Logic
+  // Find All + Search Logic
   async findAll(title?: string, author?: string) {
     const filter: Prisma.BookWhereInput = {};
 
     if (title) {
-      filter.title = { contains: title }; // Cari judul mirip
+      filter.title = { contains: title };
     }
 
     if (author) {
-      filter.author = { contains: author }; // Cari penulis mirip
+      filter.author = { contains: author };
     }
 
     return this.prisma.book.findMany({
       where: filter,
-      orderBy: { title: 'asc' }, // Urut Abjad A-Z
+      orderBy: { title: 'asc' },
+      // PENTING: Kita pilih kolom yang mau ditampilkan saja
+      select: {
+        id: true,
+        code: true,
+        title: true,
+        author: true,
+        publisher: true,
+        year: true,
+        stock: true,
+        // createdAt: false, // Gak usah dikirim (Hemat bandwidth)
+        // updatedAt: false, // Gak usah dikirim
+      },
     });
   }
 
-  // 3. Find One
+  // Find One
   async findOne(id: number) {
     const book = await this.prisma.book.findUnique({
       where: { id },
@@ -43,7 +55,7 @@ export class BooksService {
     return book;
   }
 
-  // 4. Update
+  // Update
   async update(id: number, updateBookDto: UpdateBookDto) {
     await this.findOne(id); // Cek dulu
     return this.prisma.book.update({

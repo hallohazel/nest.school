@@ -15,23 +15,24 @@ export class StudentsService {
 
   // 2. Find All (Search Engine)
   async findAll(nis?: string, name?: string) {
-    // any JADI TIPE RESMI PRISMA
     const filter: Prisma.StudentWhereInput = {};
 
     if (nis) {
-      filter.nis = nis;
+      filter.nis = {
+        contains: nis, // Biar bisa cari separuh angka
+      };
     }
 
     if (name) {
       filter.name = {
         contains: name,
-        // mode: 'insensitive'
+        // mode: 'insensitive' // (Opsional)
       };
     }
 
     return this.prisma.student.findMany({
       where: filter,
-      orderBy: { id: 'desc' },
+      orderBy: { id: 'desc' }, // Siswa terbaru muncul paling atas
     });
   }
 

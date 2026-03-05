@@ -1,15 +1,15 @@
-import { IsInt, IsNotEmpty, IsDateString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsDateString, IsOptional } from 'class-validator';
 
 export class CreatePeminjamanDto {
+  @IsOptional()
   @IsInt()
-  @IsNotEmpty()
-  id_student: number;
+  id_student?: number;
 
-  @IsInt()
   @IsNotEmpty()
+  @IsInt()
   id_buku: number;
 
-  @IsDateString() // (YYYY-MM-DD)
   @IsNotEmpty()
+  @IsDateString()
   tgl_kembali: string;
 }

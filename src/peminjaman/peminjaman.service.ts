@@ -11,7 +11,7 @@ import { PrismaService } from '../prisma.service';
 export class PeminjamanService {
   constructor(private prisma: PrismaService) {}
 
-  // 1. Create Peminjaman (PAKAI TRANSACTION BIAR AMAN) 🛡️
+  // 1. Create Peminjaman
   async create(dto: CreatePeminjamanDto) {
     // Kita bungkus dalam $transaction biar data konsisten
     return this.prisma.$transaction(async (tx) => {
@@ -70,7 +70,7 @@ export class PeminjamanService {
     return data;
   }
 
-  // 4. Update (Pengembalian Buku) 🔄
+  // 4. Update (Pengembalian Buku)
   async update(id: number, dto: UpdatePeminjamanDto) {
     // Kalau status diubah jadi 'KEMBALI', stok harus nambah +1
     if (dto.status === 'KEMBALI') {
