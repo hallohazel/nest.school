@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { UserRole } from '@prisma/client';
 import { ROLES_KEY } from '../decorators/roles.decorator';
@@ -25,6 +30,16 @@ export class RolesGuard implements CanActivate {
       .getRequest<{ user: { role: UserRole } }>();
 
     // 4. Apakah role user ada di daftar yang dibolehkan
-    return requiredRoles.some((role) => user.role === role);
+    const hasRole = requiredRoles.some((role) => user?.role === role);
+
+    if (!hasRole) {
+      throw new UnauthorizedException({
+        message: 'Admin only! You are not authorized.',
+        error: 'Unauthorized',
+        statusCode: 401,
+      });
+    }
+
+    return true;
   }
 }
