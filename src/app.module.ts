@@ -12,8 +12,6 @@ import { BooksModule } from './books/books.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath:
-        process.env.NODE_ENV === 'production' ? '.env.production' : '.env',
     }),
     StudentsModule,
     PeminjamanModule,
